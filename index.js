@@ -4,7 +4,7 @@ var Github = require('github');
 var wrapper = require('co-github');
 var _ = require('lodash');
 
-var bootstrap = require('tool-bootstrap').bootstrap;
+var bootstrap = require('buildboard-tool-bootstrap').bootstrap;
 
 bootstrap(
     {
