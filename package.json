@@ -4,9 +4,9 @@
   "description": "Github tool for BuildBoard",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start  index.js --name=\"github\" --node-args=\"--harmony_destructuring\"",
-    "dev": "pm2 --watch --no-daemon start  index.js --name=\"github\" --node-args=\"--harmony_destructuring\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "pm2 start  src/index.js --name=\"github\" --node-args=\"--harmony_destructuring\"",
+    "dev": "pm2 --watch --no-daemon start  src/index.js --name=\"github\" --node-args=\"--harmony_destructuring\"",
+    "test": "mocha --harmony_destructuring test/**/*.js"
   },
   "author": "Taucraft",
   "license": "ISC",
@@ -18,7 +18,9 @@
     "lodash": "^3.10.1"
   },
   "devDependencies": {
-    "pm2": "^0.15.10"
+    "mocha": "^2.3.4",
+    "pm2": "^0.15.10",
+    "chai": "^3.4.1"
   },
   "repository": {
     "type": "git",

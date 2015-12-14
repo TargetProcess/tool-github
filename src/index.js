@@ -57,6 +57,9 @@ function *getAll(obj, call) {
     }
     return result;
 }
+var mergeBranchesWithPullRequests = require('./github').mergeBranchesAndPullRequests;
+
+
 function *branches() {
 
     var github = wrapper(new Github({
@@ -73,26 +76,9 @@ function *branches() {
     var repo = {user: config.user, repo: config.repo};
     let branches = yield getAll(repo, github.repos.getBranches);
     let pullRequests = yield getAll(repo, github.pullRequests.getAll);
-
-    var pullRequestMap = _.groupBy(pullRequests, pr=>pr.head.ref);
-
+    var result = mergeBranchesWithPullRequests(pullRequests, branches);
     this.body = {
-        branches: _.map(branches, b=> {
-            let pullRequestsForBranch = pullRequestMap[b.name] || [];
-
-            return {
-                id: b.name,
-                name: b.name,
-                sha: b.commit.sha,
-                pullRequests: _.map(pullRequestsForBranch, pr=> {
-                    return {
-                        id: pr.number,
-                        status: pr.state,
-                        sha: pr.merge_commit_sha
-                    };
-                })
-            }
-        })
+        branches: result
     };
 
 }
