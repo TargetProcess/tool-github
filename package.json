@@ -29,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/buildboard/codetool-github/issues"
   },
-  "homepage": "https://github.com/buildboard/codetool-github#readme"
+  "homepage": "https://github.com/buildboard/codetool-github#readme",
+  "directories": {
+    "test": "test"
+  }
 }
