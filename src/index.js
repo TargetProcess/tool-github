@@ -8,11 +8,6 @@ var bootstrap = require('buildboard-tool-bootstrap').bootstrap;
 
 bootstrap(
     {
-        mongo: {
-            port: process.env.MONGO_PORT || 3001,
-            db: 'codetool-github'
-        },
-        port: process.env.GITHUB_PORT || 3334,
         settings: {
             user: {
                 caption: 'Github user',
