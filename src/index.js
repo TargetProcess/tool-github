@@ -8,6 +8,7 @@ var bootstrap = require('buildboard-tool-bootstrap').bootstrap;
 
 bootstrap(
     {
+        id: 'github',
         settings: {
             user: {
                 caption: 'Github user',
