@@ -1,7 +1,5 @@
 'use strict';
 
-var Github = require('github');
-var wrapper = require('co-github');
 var _ = require('lodash');
 
 var bootstrap = require('buildboard-tool-bootstrap').bootstrap;
@@ -30,49 +28,22 @@ bootstrap(
                     action: branches
                 }
             }
-        }
+        },
+        account: require('./account')
     }
 );
 
 
-function *getAll(obj, call) {
-    let config = _.clone(obj);
-    config.page = 0;
-    config.per_page = 100;
-    let result = [];
-    while (config) {
-        let page = yield call(config);
-        let meta = page.meta;
-        if (meta && meta.link && meta.link.indexOf('rel="next"') >= 0) {
-            config.page++;
-        }
-        else {
-            config = null;
-        }
-        result = result.concat(page);
-    }
-    return result;
-}
-var mergeBranchesWithPullRequests = require('./github').mergeBranchesAndPullRequests;
-
+let githubTools = require('./githubTools');
 
 function *branches() {
-
-    var github = wrapper(new Github({
-        version: "3.0.0",
-        debug: true,
-        protocol: "https",
-        host: "api.github.com",
-        timeout: 5000
-    }));
-
     var config = this.passport.user.config;
-    github.authenticate({type: 'oauth', token: config.authentication});
+    var github = githubTools.createGithubClient(config);
 
     var repo = {user: config.user, repo: config.repo};
-    let branches = yield getAll(repo, github.repos.getBranches);
-    let pullRequests = yield getAll(repo, github.pullRequests.getAll);
-    var result = mergeBranchesWithPullRequests(pullRequests, branches);
+    let branches = yield githubTools.getAll(repo, github.repos.getBranches);
+    let pullRequests = yield githubTools.getAll(repo, github.pullRequests.getAll);
+    var result = githubTools.mergeBranchesAndPullRequests(pullRequests, branches);
     this.body = {
         branches: result
     };

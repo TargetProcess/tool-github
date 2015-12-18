@@ -1,6 +1,6 @@
 var expect = require("chai").expect;
 
-var merge = require("../src/github").mergeBranchesAndPullRequests;
+var merge = require("../src/githubTools").mergeBranchesAndPullRequests;
 describe('codetool-github', ()=> {
     "use strict";
     it('should merge', ()=> {
