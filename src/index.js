@@ -30,8 +30,14 @@ bootstrap(
             }
         },
         account: require('./account')
+    },
+    ({router})=> {
+        router.post('/webhook', function *() {
+            console.log(this.request.body);
+        })
     }
-);
+)
+;
 
 
 let githubTools = require('./githubTools');
