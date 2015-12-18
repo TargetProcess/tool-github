@@ -45,7 +45,7 @@ function *branches() {
     let pullRequests = yield githubTools.getAll(repo, github.pullRequests.getAll);
     var result = githubTools.mergeBranchesAndPullRequests(pullRequests, branches);
     this.body = {
-        branches: result
+        items: result
     };
 
 }
