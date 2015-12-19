@@ -23,7 +23,7 @@ bootstrap(
             }
         },
         methods: {
-            '/branches': {
+            'branches': {
                 'get': {
                     action: branches
                 }
