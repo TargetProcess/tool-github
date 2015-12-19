@@ -6,22 +6,24 @@ var wrapper = require('co-github');
 
 module.exports = {
     mergeBranchesAndPullRequests(pullRequests, branches){
-        var pullRequestMap = _.groupBy(pullRequests, pr=>pr.head.ref);
+        var pullRequestProjections = _.map(pullRequests, pr=>({
+            id: pr.number,
+            name: pr.number, // TODO: use correct name
+            url: pr.url, // TODO: use correct url
+            status: pr.state,
+            sha: pr.merge_commit_sha,
+            branch: pr.head.ref
+        }));
+
+
+        var pullRequestMap = _.groupBy(pullRequestProjections, pr=>pr.branch);
 
         return _.map(branches, b=> {
-            let pullRequestsForBranch = pullRequestMap[b.name] || [];
-
             return {
                 id: b.name,
                 name: b.name,
                 sha: b.commit.sha,
-                pullRequests: _.map(pullRequestsForBranch, pr=> {
-                    return {
-                        id: pr.number,
-                        status: pr.state,
-                        sha: pr.merge_commit_sha
-                    };
-                })
+                pullRequests: pullRequestMap[b.id] || []
             }
         });
 
