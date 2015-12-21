@@ -11,7 +11,7 @@
   "author": "Taucraft",
   "license": "ISC",
   "dependencies": {
-    "buildboard-tool-bootstrap": "github:buildboard/tool-bootstrap",
+    "buildboard-tool-bootstrap": "github:buildboard/builboard-tool-bootstrap",
     "chai": "^3.4.1",
     "co-github": "^1.0.0",
     "github": "^0.2.4",
@@ -24,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/buildboard/codetool-github.git"
+    "url": "git+https://github.com/buildboard/tool-github.git"
   },
   "bugs": {
-    "url": "https://github.com/buildboard/codetool-github/issues"
+    "url": "https://github.com/buildboard/tool-github/issues"
   },
-  "homepage": "https://github.com/buildboard/codetool-github#readme",
+  "homepage": "https://github.com/buildboard/tool-github#readme",
   "directories": {
     "test": "test"
   }
