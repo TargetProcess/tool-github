@@ -27,8 +27,7 @@ bootstrap(
                 'get': {
                     action: branches
                 }
-            },
-            ''
+            }
         },
         account: require('./account')
     },
