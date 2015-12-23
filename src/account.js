@@ -16,12 +16,12 @@ function *createWebhook(account, generalSettings) {
     var result = yield github.repos.createHook({
         user: account.config.user,
         repo: account.config.repo,
-        name: "web",
+        name: 'web',
         active: true,
-        events: ["push", "create", "delete", "pull_request"],
+        events: ['push', 'create', 'delete', 'pull_request'],
         config: {
             url: generalSettings.url + '/webhook?token=' + account.toolToken,
-            content_type: "json"
+            content_type: 'json'
         }
     });
     account.webhookId = result.id;
@@ -42,6 +42,6 @@ module.exports = function ({generalSettings}) {
         *onDelete(account){
             yield deleteWebhook(account);
         }
-    }
+    };
 };
 

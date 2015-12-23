@@ -3,7 +3,6 @@ const _ = require('lodash');
 var Github = require('github');
 var wrapper = require('co-github');
 
-
 module.exports = {
     mergeBranchesAndPullRequests(pullRequests, branches){
         var pullRequestProjections = _.map(pullRequests, pr=>({
@@ -15,7 +14,6 @@ module.exports = {
             branch: pr.head.ref
         }));
 
-
         var pullRequestMap = _.groupBy(pullRequestProjections, pr=>pr.branch);
 
         return _.map(branches, b=> {
@@ -24,16 +22,16 @@ module.exports = {
                 name: b.name,
                 sha: b.commit.sha,
                 pullRequests: pullRequestMap[b.id] || []
-            }
+            };
         });
 
     },
     createGithubClient(config) {
         var github = wrapper(new Github({
-            version: "3.0.0",
+            version: '3.0.0',
             debug: true,
-            protocol: "https",
-            host: "api.github.com",
+            protocol: 'https',
+            host: 'api.github.com',
             timeout: 5000
         }));
 
@@ -50,8 +48,7 @@ module.exports = {
             let meta = page.meta;
             if (meta && meta.link && meta.link.indexOf('rel="next"') >= 0) {
                 config.page++;
-            }
-            else {
+            } else {
                 config = null;
             }
             result = result.concat(page);

@@ -23,8 +23,8 @@ bootstrap(
             }
         },
         methods: {
-            'branches': {
-                'get': {
+            branches: {
+                get: {
                     action: branches
                 }
             }
@@ -34,11 +34,10 @@ bootstrap(
     ({router})=> {
         router.post('/webhook', function *() {
             console.log(this.request.body);
-        })
+        });
     }
 )
 ;
-
 
 let githubTools = require('./githubTools');
 
