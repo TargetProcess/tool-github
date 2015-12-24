@@ -8,7 +8,7 @@ var url = require('url');
 function createGithubClient(config) {
     var github = wrapper(new Github({
         version: '3.0.0',
-        debug: true,
+        debug: false,
         protocol: 'https',
         host: 'api.github.com',
         timeout: 5000
