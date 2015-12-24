@@ -9,8 +9,7 @@ function *deleteWebhook(account) {
                 repo: account.config.repo,
                 id: account.webhookId
             });
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e);
         }
     }

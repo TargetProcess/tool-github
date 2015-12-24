@@ -7,17 +7,16 @@ var url = require('url');
 
 function createGithubClient(config) {
     var github = wrapper(new Github({
-        version: "3.0.0",
+        version: '3.0.0',
         debug: true,
-        protocol: "https",
-        host: "api.github.com",
+        protocol: 'https',
+        host: 'api.github.com',
         timeout: 5000
     }));
 
     github.authenticate({type: 'oauth', token: config.authentication});
     return github;
 }
-
 
 module.exports = {
     createGithubClient,
@@ -34,7 +33,6 @@ module.exports = {
             page,
             per_page: per_page + 1
         };
-
 
         let items = yield caller(github)(repoConfig);
         ctx.body = {

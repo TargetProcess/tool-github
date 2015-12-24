@@ -27,8 +27,8 @@ tool.bootstrap(
                     action: branches
                 }
             },
-            'pullRequests': {
-                'get': {
+            pullRequests: {
+                get: {
                     action: pullRequests
                 }
             }
@@ -66,6 +66,6 @@ function *pullRequests() {
             sha: pr.merge_commit_sha,
             branch: pr.head.ref,
             base: pr.base.ref
-        })
+        });
     });
 }
