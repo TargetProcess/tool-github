@@ -1,10 +1,9 @@
 'use strict';
 
 var _ = require('lodash');
-
-var bootstrap = require('buildboard-tool-bootstrap').bootstrap;
-
-bootstrap(
+var url = require('url');
+const tool = require('buildboard-tool-bootstrap');
+tool.bootstrap(
     {
         id: 'github',
         settings: {
@@ -27,6 +26,11 @@ bootstrap(
                 get: {
                     action: branches
                 }
+            },
+            'pullRequests': {
+                'get': {
+                    action: pullRequests
+                }
             }
         },
         account: require('./account')
@@ -42,15 +46,26 @@ bootstrap(
 let githubTools = require('./githubTools');
 
 function *branches() {
-    var config = this.passport.user.config;
-    var github = githubTools.createGithubClient(config);
 
-    var repo = {user: config.user, repo: config.repo};
-    let branches = yield githubTools.getAll(repo, github.repos.getBranches);
-    let pullRequests = yield githubTools.getAll(repo, github.pullRequests.getAll);
-    var result = githubTools.mergeBranchesAndPullRequests(pullRequests, branches);
-    this.body = {
-        items: result
-    };
+    yield githubTools.makeCall(this, g=>g.repos.getBranches, (b, repoConfig)=>({
+        id: b.name,
+        name: b.name,
+        url: `https://github.com/${repoConfig.user}/${repoConfig.repo}/tree/${b.name}`,
+        sha: b.commit.sha
+    }));
+}
 
+function *pullRequests() {
+    yield githubTools.makeCall(this, g=>g.pullRequests.getAll, pr=> {
+        console.log(pr);
+        return ({
+            id: pr.number,
+            name: pr.title,
+            url: pr.html_url,
+            status: pr.state,
+            sha: pr.merge_commit_sha,
+            branch: pr.head.ref,
+            base: pr.base.ref
+        })
+    });
 }

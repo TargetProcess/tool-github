@@ -2,57 +2,49 @@
 const _ = require('lodash');
 var Github = require('github');
 var wrapper = require('co-github');
+const tool = require('buildboard-tool-bootstrap');
+var url = require('url');
+
+function createGithubClient(config) {
+    var github = wrapper(new Github({
+        version: "3.0.0",
+        debug: true,
+        protocol: "https",
+        host: "api.github.com",
+        timeout: 5000
+    }));
+
+    github.authenticate({type: 'oauth', token: config.authentication});
+    return github;
+}
+
 
 module.exports = {
-    mergeBranchesAndPullRequests(pullRequests, branches){
-        var pullRequestProjections = _.map(pullRequests, pr=>({
-            id: pr.number,
-            name: pr.number, // TODO: use correct name
-            url: pr.url, // TODO: use correct url
-            status: pr.state,
-            sha: pr.merge_commit_sha,
-            branch: pr.head.ref
-        }));
+    createGithubClient,
+    *makeCall(ctx, caller, mapper){
+        var fullUrl = tool.getUrl(ctx);
+        let config = ctx.passport.user.config;
+        var github = createGithubClient(config);
 
-        var pullRequestMap = _.groupBy(pullRequestProjections, pr=>pr.branch);
+        const per_page = (parseInt(ctx.request.query.per_page) || 100);
+        const page = parseInt(ctx.request.query.page) || 1;
+        var repoConfig = {
+            user: config.user,
+            repo: config.repo,
+            page,
+            per_page: per_page + 1
+        };
 
-        return _.map(branches, b=> {
-            return {
-                id: b.name,
-                name: b.name,
-                sha: b.commit.sha,
-                pullRequests: pullRequestMap[b.id] || []
-            };
-        });
 
-    },
-    createGithubClient(config) {
-        var github = wrapper(new Github({
-            version: '3.0.0',
-            debug: true,
-            protocol: 'https',
-            host: 'api.github.com',
-            timeout: 5000
-        }));
-
-        github.authenticate({type: 'oauth', token: config.authentication});
-        return github;
-    },
-    *getAll(obj, call) {
-        let config = _.clone(obj);
-        config.page = 0;
-        config.per_page = 100;
-        let result = [];
-        while (config) {
-            let page = yield call(config);
-            let meta = page.meta;
-            if (meta && meta.link && meta.link.indexOf('rel="next"') >= 0) {
-                config.page++;
-            } else {
-                config = null;
-            }
-            result = result.concat(page);
+        let items = yield caller(github)(repoConfig);
+        ctx.body = {
+            items: _.map(items, item=>mapper(item, repoConfig)).slice(0, per_page)
+        };
+        if (items.length > per_page) {
+            fullUrl.query.page = page + 1;
+            fullUrl.search = undefined;
+            ctx.body.next = url.format(fullUrl);
         }
-        return result;
     }
-};
+}
+;

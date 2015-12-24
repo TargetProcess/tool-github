@@ -2,12 +2,17 @@ var githubTools = require('./githubTools');
 
 function *deleteWebhook(account) {
     if (account.webhookId) {
-        var github = githubTools.createGithubClient(account.config);
-        yield github.repos.deleteHook({
-            user: account.config.user,
-            repo: account.config.repo,
-            id: account.webhookId
-        });
+        try {
+            var github = githubTools.createGithubClient(account.config);
+            yield github.repos.deleteHook({
+                user: account.config.user,
+                repo: account.config.repo,
+                id: account.webhookId
+            });
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 }
 
@@ -34,7 +39,6 @@ module.exports = function ({generalSettings}) {
         },
 
         *onUpdate(account, oldAccount){
-            console.log(oldAccount.config);
             yield deleteWebhook(oldAccount);
             return yield createWebhook(account, generalSettings);
         },
