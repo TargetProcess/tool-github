@@ -57,14 +57,15 @@ function *branches() {
 
 function *pullRequests() {
     yield githubTools.makeCall(this, g=>g.pullRequests.getAll, pr=> {
-        console.log(pr);
         return ({
             id: pr.number,
             name: pr.title,
             url: pr.html_url,
+            branch: pr.head.ref,
+
+
             status: pr.state,
             sha: pr.merge_commit_sha,
-            branch: pr.head.ref,
             base: pr.base.ref
         });
     });
