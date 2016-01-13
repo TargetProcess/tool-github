@@ -4,7 +4,7 @@
   "description": "Github tool for BuildBoard",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start  src/index.js --name=\"github\" --node-args=\"--harmony_destructuring\"",
+    "start": "pm2 start deploy/start.json",
     "dev": "pm2 --watch --no-daemon start  src/index.js --name=\"github\" --node-args=\"--harmony_destructuring\"",
     "jscs": "jscs ./ --config=./.jscsrc --reporter=console",
     "jscsfix": "jscs ./ --config=./.jscsrc --reporter=console --fix",
