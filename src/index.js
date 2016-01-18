@@ -19,6 +19,18 @@ tool.bootstrap(
                 caption: 'Github token',
                 description: 'Generated via https://github.com/settings/tokens',
                 type: 'string'
+            },
+            taskMappingRegex: {
+                caption: 'Mapping regexp',
+                description: 'How to get a task id part from branch',
+                type: 'regex',
+                defaultValue: '^feature/(?:us|bug)(\\d+).*$'
+            },
+            taskMapping: {
+                caption: 'Mapping result',
+                description: 'Final task id projection',
+                type: 'string',
+                defaultValue: '{$1}'
             }
         },
         methods: {
@@ -43,16 +55,24 @@ tool.bootstrap(
 )
 ;
 
-let githubTools = require('./githubTools');
+const githubTools = require('./githubTools');
+const mappingFactory = require('./mapping');
 
 function *branches() {
+    var config = this.passport.user.config;
+    var mapping = mappingFactory(config.taskMappingRegex || '.*', config.taskMapping || '{$0}');
 
-    yield githubTools.makeCall(this, g=>g.repos.getBranches, (b, repoConfig)=>({
-        id: b.name,
-        name: b.name,
-        url: `https://github.com/${repoConfig.user}/${repoConfig.repo}/tree/${b.name}`,
-        sha: b.commit.sha
-    }));
+    yield githubTools.makeCall(this, g=>g.repos.getBranches, (b, config)=> {
+        var branch = {
+            id: b.name,
+            name: b.name,
+            url: `https://github.com/${config.user}/${config.repo}/tree/${b.name}`,
+
+            sha: b.commit.sha
+        };
+        branch.wid = mapping(branch.id, branch);
+        return branch;
+    });
 }
 
 function *pullRequests() {
@@ -61,9 +81,8 @@ function *pullRequests() {
             id: pr.number,
             name: pr.title,
             url: pr.html_url,
+
             branch: pr.head.ref,
-
-
             status: pr.state,
             sha: pr.merge_commit_sha,
             base: pr.base.ref

@@ -16,12 +16,13 @@
     "buildboard-tool-bootstrap": "https://github.com/buildboard/buildboard-tool-bootstrap.git",
     "co-github": "^1.0.0",
     "github": "^0.2.4",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "string-format": "^0.5.0"
   },
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
-    "pm2": "^0.15.10",
+    "pm2": "^1.0.0",
     "jscs": "^2.7.0"
   },
   "repository": {
