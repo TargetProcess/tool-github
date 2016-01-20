@@ -85,7 +85,8 @@ function *pullRequests() {
             branch: pr.head.ref,
             status: pr.state,
             sha: pr.merge_commit_sha,
-            base: pr.base.ref
+            base: pr.base.ref,
+            mergeable: pr.mergeable
         });
     });
 }
